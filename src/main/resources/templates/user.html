@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+        #sidebar {
+            position: absolute;
+            width: 20%;
+            height: 100%;
+            margin-top: 15px;
+        }
+
+        #user {
+            position: absolute;
+            height: 100%;
+            width: 80%;
+            left: 20%;
+            background: ghostwhite;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark ">
+    <nav class="navbar-brand" th:text="${email}+' with roles: '+${roles}"></nav>
+    <a class="ml-auto text-white-50" href="/logout">Logout</a>
+</nav>
+
+<div id="sidebar">
+    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <div th:if="${isAdmin}">
+        <a class="nav-link"  href="/admin" role="tab"
+           aria-selected="false">Admin</a>
+        </div>
+        <a class="nav-link active" id="v-pills-profile-tab" data-toggle="pill" role="tab"
+           aria-controls="v-pills-profile" aria-selected="true">User</a>
+    </div>
+</div>
+
+<div class="container pl-4 pr-4" id="user">
+    <h1 class="mt-3">User information-page</h1>
+
+
+    <div class="tab-content" id="myTabContent">
+        <h4 class="ml-3 mt-3">About user</h4>
+        <div class="container bg-white p-3">
+            <table class="table table-striped ">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:with="user=${user}">
+                    <td th:text="${user.getId()}"></td>
+                    <td th:text="${user.getFirstName()}"></td>
+                    <td th:text="${user.getLastName()}"></td>
+                    <td th:text="${user.getAge()}"></td>
+                    <td th:text="${user.getEmail()}"></td>
+                    <td th:text="${user.getStringRoles()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
