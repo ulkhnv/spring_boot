@@ -1,5 +1,7 @@
 package boot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class User {
     @Column
     private String password;
 
+    @JsonIgnore
     @ManyToMany(cascade=CascadeType.MERGE,fetch = FetchType.EAGER)
     @JoinTable(
             name="user_role",
