@@ -3,17 +3,13 @@ package boot.controller;
 import boot.model.Role;
 import boot.model.User;
 import boot.service.UserService;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 
 @RestController
@@ -29,16 +25,9 @@ public class UserRestController {
     }
 
     @PostMapping("/saveUser")
-    public ResponseEntity<?> saveUser(@RequestBody Map<String,String> data) {
+    public ResponseEntity<?> saveUser(User user,@RequestParam("role") String role) {
         List<Role> roles = new ArrayList<>();
-        User user = new User(
-                data.get("firstName"),
-                data.get("lastName"),
-                Integer.parseInt(data.get("age")),
-                data.get("email"),
-                data.get("password")
-        );
-        if (data.get("role").contains("ADMIN")) {
+        if (role.contains("ADMIN")) {
             roles.add(new Role(1,"ROLE_ADMIN"));
         } else {
             roles.add(new Role(2,"ROLE_USER)"));
@@ -49,22 +38,15 @@ public class UserRestController {
     }
 
     @PutMapping("/updateUser/{id}")
-    public ResponseEntity<?> updateUser(@RequestBody Map<String,String> data, @PathVariable Long id) {
+    public ResponseEntity<?> updateUser(User user, @PathVariable Long id,@RequestParam("role") String role) {
         List<Role> roles = new ArrayList<>();
-        User user = new User(
-                id,
-                data.get("firstName"),
-                data.get("lastName"),
-                Integer.parseInt(data.get("age")),
-                data.get("email"),
-                data.get("password")
-        );
-        if (data.get("role").contains("ADMIN")) {
+        if (role.contains("ADMIN")) {
             roles.add(new Role(1,"ROLE_ADMIN"));
         } else {
             roles.add(new Role(2,"ROLE_USER)"));
         }
         user.setRoles(roles);
+        userService.saveUser(user);
         try {
             userService.findUserById(id);
             userService.saveUser(user);

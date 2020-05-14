@@ -6,20 +6,11 @@ $(document).ready(function () {
     });
 
     $("#addForm").submit(function () {
-        let data = {
-            "firstName": $("#fn").val(),
-            "lastName": $("#ln").val(),
-            "age": $("#age").val(),
-            "email": $("#email").val(),
-            "password": $("#password").val(),
-            "role": $("#role").children("option:selected").val()
-        };
+        let user = $(this).serialize();
         $.ajax({
             type: "POST",
             url: "/admin/saveUser",
-            contentType: "application/json",
-            data: JSON.stringify(data),
-            dataType: 'text',
+            data: user,
             success: (function () {
                 alert("User successfully added");
                 $('#userForm')[0].reset();
@@ -47,23 +38,11 @@ $(document).ready(function () {
     });
 
     $("#editForm").submit(function () {
-        let id = $("#idUpdate").val();
-        let data = {
-            "id": id,
-            "firstName": $("#fnUpdate").val(),
-            "lastName": $("#lnUpdate").val(),
-            "age": $("#ageUpdate").val(),
-            "email": $("#emailUpdate").val(),
-            "password": $("#passwordUpdate").val(),
-            "role": $("#roleUpdate").children("option:selected").val()
-        };
+        let user = $(this).serialize();
         $.ajax({
-            type : "PUT",
-            url : "/admin/updateUser/" + id,
-            contentType: "application/json",
-            data: JSON.stringify(data),
-            dataType: 'text'
-        });
+            type: "POST",
+            url: "/admin/saveUser",
+            data: user});
         return getUsers();
     });
 
