@@ -6,14 +6,22 @@ $(document).ready(function () {
     });
 
     $("#addForm").submit(function () {
-        let user = $(this).serialize();
+        var user= {
+            firstName: $("#fn").val(),
+            lastName: $("#ln").val(),
+            age: $("#age").val(),
+            email: $("#email").val(),
+            password: $("#password").val(),
+            roles: getRoles($("#roles option:selected"))
+        };
         $.ajax({
             type: "POST",
             url: "/admin/saveUser",
-            data: user,
+            contentType: "application/json",
+            data: JSON.stringify(user),
             success: (function () {
                 alert("User successfully added");
-                $('#userForm')[0].reset();
+                $('#addForm')[0].reset();
             }),
             error: (function () {
                 alert("User not added");
@@ -38,11 +46,22 @@ $(document).ready(function () {
     });
 
     $("#editForm").submit(function () {
-        let user = $(this).serialize();
+        let id = $("#idUpdate").val();
+        var user= {
+            id:id,
+            firstName: $("#fnUpdate").val(),
+            lastName: $("#lnUpdate").val(),
+            age: $("#ageUpdate").val(),
+            email: $("#emailUpdate").val(),
+            password: $("#passwordUpdate").val(),
+            roles: getRoles($("#roleUpdate option:selected"))
+        };
         $.ajax({
-            type: "POST",
-            url: "/admin/saveUser",
-            data: user});
+            type: "PUT",
+            url: "/admin/updateUser/"+id,
+            contentType: "application/json",
+            data: JSON.stringify(user),
+        });
         return getUsers();
     });
 
@@ -58,7 +77,7 @@ $(document).ready(function () {
             $("#lnDelete").attr("value",user.lastName);
             $("#ageDelete").attr("value",user.age);
             $("#emailDelete").attr("value",user.email);
-            $("#passworDelete").attr("value",user.password);
+            $("#passwordDelete").attr("value",user.password);
         });
     });
 
@@ -98,5 +117,16 @@ function getUsers() {
             $('#tableBody').empty().append(tableBody);
         })
     });
+}
+
+function getRoles(obj) {
+    if (obj.size()===2) {
+        return [{id:1,name:"ROLE_ADMIN"},{id:2,name:"ROLE_USER"}];
+    } else if (obj.size()===1) {
+         if (obj.text()==="ADMIN") {
+             return [{id:1,name:"ROLE_ADMIN"}];
+         }
+    }
+    return [{id:2,name:"ROLE_USER"}];
 }
 

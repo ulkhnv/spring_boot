@@ -1,10 +1,10 @@
 package boot.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity
 @Table(name = "users")
@@ -16,7 +16,7 @@ public class User implements Serializable {
 
     @Column
     private String firstName;
-
+ 
     @Column
     private String lastName;
 
@@ -29,27 +29,27 @@ public class User implements Serializable {
     @Column
     private String password;
 
-    @JsonIgnore
     @ManyToMany(cascade=CascadeType.MERGE,fetch = FetchType.EAGER)
     @JoinTable(
             name="user_role",
             joinColumns={@JoinColumn(name="USER_ID", referencedColumnName="ID")},
             inverseJoinColumns={@JoinColumn(name="ROLE_ID", referencedColumnName="ID")})
-    private List<Role> roles;
+    private Collection<Role> roles;
 
     public User() {
     }
 
-    public User(String firstName, String lastName, Integer age, String email, String password) {
+    public User(String firstName, String lastName, Integer age, String email, String password,Collection<Role> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
         this.email = email;
         this.password = password;
+        this.roles=roles;
     }
 
-    public User(Long id, String firstName, String lastName, Integer age, String email, String password) {
-        this(firstName, lastName, age, email, password);
+    public User(Long id, String firstName, String lastName, Integer age, String email, String password,Collection<Role> roles) {
+        this(firstName, lastName, age, email, password,roles);
         this.id = id;
     }
 
@@ -101,11 +101,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public Collection<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Collection<Role> roles) {
         this.roles = roles;
     }
 
@@ -124,6 +124,11 @@ public class User implements Serializable {
 
     public boolean isAdmin() {
         return getStringRoles().contains("ADMIN");
+    }
+
+    @Override
+    public String toString() {
+        return firstName + " " + lastName + " " + age + " " + password+" "+getStringRoles();
     }
 }
 

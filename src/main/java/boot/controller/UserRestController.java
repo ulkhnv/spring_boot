@@ -25,27 +25,13 @@ public class UserRestController {
     }
 
     @PostMapping("/saveUser")
-    public ResponseEntity<?> saveUser(User user,@RequestParam("role") String role) {
-        List<Role> roles = new ArrayList<>();
-        if (role.contains("ADMIN")) {
-            roles.add(new Role(1,"ROLE_ADMIN"));
-        } else {
-            roles.add(new Role(2,"ROLE_USER)"));
-        }
-        user.setRoles(roles);
+    public ResponseEntity<?> saveUser(@RequestBody User user) {
         userService.saveUser(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/updateUser/{id}")
-    public ResponseEntity<?> updateUser(User user, @PathVariable Long id,@RequestParam("role") String role) {
-        List<Role> roles = new ArrayList<>();
-        if (role.contains("ADMIN")) {
-            roles.add(new Role(1,"ROLE_ADMIN"));
-        } else {
-            roles.add(new Role(2,"ROLE_USER)"));
-        }
-        user.setRoles(roles);
+    public ResponseEntity<?> updateUser(@RequestBody User user, @PathVariable Long id) {
         userService.saveUser(user);
         try {
             userService.findUserById(id);
